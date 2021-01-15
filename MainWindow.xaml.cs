@@ -17,16 +17,14 @@ using System.Threading;
 
 namespace Reaction
 {
-    /// <summary>
-    /// MainWindow.xaml 的交互逻辑
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly Random _random = new Random();
         private Stopwatch _stopwatch = new Stopwatch();
+        private CancellationTokenSource _tokenSource;
         private bool _isEndClicked { get; set; }
         private long _validTimes { get; set; } = 0;
-        private long _sumScores { get; set; } = 0;
+        private long _totalScores { get; set; } = 0;
 
         public MainWindow()
         {
@@ -42,17 +40,30 @@ namespace Reaction
             } else
             {
                 labelValid.Content = _validTimes.ToString();
-                labelAverage.Content = (_sumScores / _validTimes).ToString();
+                labelAverage.Content = (_totalScores / _validTimes).ToString();
             }
-            
+        }
+
+        private async Task TaskDelay(CancellationToken token)
+        {
+            int waiting_time = _random.Next(3000, 6000);
+            _tokenSource.Token.ThrowIfCancellationRequested();
+            await Task.Delay(waiting_time, token);
         }
 
         private async void buttonStart_Click(object sender, RoutedEventArgs e)
         {
             buttonStart.IsEnabled = false;
-            int waiting_time = _random.Next(4000, 8000);
             _isEndClicked = false;
-            await Task.Delay(waiting_time);
+            _tokenSource = new CancellationTokenSource();
+            try
+            {
+                await TaskDelay(_tokenSource.Token);
+            }
+            catch(TaskCanceledException)
+            {
+                labelTimeUsed.Content = "Don't cheat yourself!";
+            }
             if (!_isEndClicked)
             {
                 gridBackground.Background = Brushes.Red;
@@ -68,13 +79,15 @@ namespace Reaction
                 _stopwatch.Stop();
                 labelTimeUsed.Content = "Time used: " + _stopwatch.ElapsedMilliseconds.ToString() + " ms";
                 _validTimes += 1;
-                _sumScores += _stopwatch.ElapsedMilliseconds;
+                _totalScores += _stopwatch.ElapsedMilliseconds;
                 showScores();
                 _stopwatch.Reset();
                 gridBackground.Background = Brushes.White;
-            } else
+            }
+            if (_tokenSource != null && !_tokenSource.IsCancellationRequested)
             {
-                labelTimeUsed.Content = "Don't cheat yourself!";
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
             }
             buttonStart.IsEnabled = true;
         }
@@ -82,7 +95,7 @@ namespace Reaction
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
             _validTimes = 0;
-            _sumScores = 0;
+            _totalScores = 0;
             showScores();
         }
     }
