@@ -1,0 +1,89 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Threading;
+
+namespace Reaction
+{
+    /// <summary>
+    /// MainWindow.xaml 的交互逻辑
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private readonly Random _random = new Random();
+        private Stopwatch _stopwatch = new Stopwatch();
+        private bool _isEndClicked { get; set; }
+        private long _validTimes { get; set; } = 0;
+        private long _sumScores { get; set; } = 0;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void showScores()
+        {
+            if(_validTimes == 0)
+            {
+                labelValid.Content = "0";
+                labelAverage.Content = "";
+            } else
+            {
+                labelValid.Content = _validTimes.ToString();
+                labelAverage.Content = (_sumScores / _validTimes).ToString();
+            }
+            
+        }
+
+        private async void buttonStart_Click(object sender, RoutedEventArgs e)
+        {
+            buttonStart.IsEnabled = false;
+            int waiting_time = _random.Next(4000, 8000);
+            _isEndClicked = false;
+            await Task.Delay(waiting_time);
+            if (!_isEndClicked)
+            {
+                gridBackground.Background = Brushes.Red;
+                _stopwatch.Start();
+            }
+        }
+
+        private void buttonEnd_Click(object sender, RoutedEventArgs e)
+        {
+            _isEndClicked = true;
+            if(_stopwatch.IsRunning)
+            {
+                _stopwatch.Stop();
+                labelTimeUsed.Content = "Time used: " + _stopwatch.ElapsedMilliseconds.ToString() + " ms";
+                _validTimes += 1;
+                _sumScores += _stopwatch.ElapsedMilliseconds;
+                showScores();
+                _stopwatch.Reset();
+                gridBackground.Background = Brushes.White;
+            } else
+            {
+                labelTimeUsed.Content = "Don't cheat yourself!";
+            }
+            buttonStart.IsEnabled = true;
+        }
+
+        private void buttonReset_Click(object sender, RoutedEventArgs e)
+        {
+            _validTimes = 0;
+            _sumScores = 0;
+            showScores();
+        }
+    }
+}

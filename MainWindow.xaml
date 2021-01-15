@@ -1,0 +1,26 @@
+﻿<Window x:Class="Reaction.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Reaction"
+        mc:Ignorable="d"
+        Title="Reaction Time Tester" Height="340" Width="580" MinHeight="340" MinWidth="580">
+    <Window.Icon>
+        <DrawingImage />
+    </Window.Icon>
+    <Grid x:Name="gridBackground">
+        <Grid Margin="56,126,47,65" HorizontalAlignment="Center" VerticalAlignment="Center" Height="118" Width="469">
+            <Button x:Name="buttonStart" Content="Start" HorizontalAlignment="Left" Margin="154,37,0,0" VerticalAlignment="Top" Width="60" Height="26" FontSize="16" Click="buttonStart_Click"/>
+            <Button x:Name="buttonEnd" Content="End" HorizontalAlignment="Left" Margin="219,37,0,0" VerticalAlignment="Top" Width="60" FontSize="16" Height="26" Click="buttonEnd_Click"/>
+            <Label Content="Press &quot;Start&quot; to start. When the background turns red press &quot;End&quot; immediately." HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+            <Label x:Name="labelTimeUsed" Content="" HorizontalAlignment="Left" Margin="154,83,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Label Content="Valid times:" HorizontalAlignment="Left" Margin="22,13,0,0" VerticalAlignment="Top" Width="100"/>
+        <Label Content="Average score:" HorizontalAlignment="Left" Margin="22,38,0,0" VerticalAlignment="Top" Width="100"/>
+        <Button x:Name="buttonReset" Content="Reset" HorizontalAlignment="Left" Margin="22,68,0,0" VerticalAlignment="Top" Width="100" Click="buttonReset_Click"/>
+        <Label x:Name="labelValid" Content="0" HorizontalAlignment="Left" Margin="127,13,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="labelAverage" Content="" HorizontalAlignment="Left" Margin="127,38,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
