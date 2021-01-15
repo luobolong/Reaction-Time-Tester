@@ -40,7 +40,7 @@ namespace Reaction
             } else
             {
                 labelValid.Content = _validTimes.ToString();
-                labelAverage.Content = (_totalScores / _validTimes).ToString();
+                labelAverage.Content = (_totalScores / _validTimes).ToString() + " ms";
             }
         }
 
