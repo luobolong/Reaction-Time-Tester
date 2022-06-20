@@ -46,7 +46,7 @@ namespace Reaction
 
         private async Task TaskDelay(CancellationToken token)
         {
-            int waiting_time = _random.Next(3000, 6000);
+            int waiting_time = _random.Next(2000, 5000);
             _tokenSource.Token.ThrowIfCancellationRequested();
             await Task.Delay(waiting_time, token);
         }
